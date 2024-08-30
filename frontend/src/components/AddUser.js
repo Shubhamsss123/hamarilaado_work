@@ -28,7 +28,7 @@ const AddUser = () => {
         }
 
         if (!local_err) {
-            let result = await fetch('http://127.0.0.1:4500/add-user', {
+            let result = await fetch('https://girls5k.org/api/add-user', {
                 method: "post",
                 body: JSON.stringify({ number,name, email, gender,consent, phone, city, state, country, mode }),
                 headers: {
