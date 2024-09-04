@@ -15,7 +15,7 @@ const AddUser = () => {
     const [mode, setMode] = useState('');
 
     const navigate = useNavigate();
-
+    // console.log(`the razorpay id si ${process.env.REACT_APP_RAZORPAY_KEY_ID}`);
     const addUser = async () => {
         
         let local_err = false;

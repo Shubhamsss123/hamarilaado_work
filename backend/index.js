@@ -1,4 +1,8 @@
 const express=require('express');
+require('dotenv').config();
+const Razorpay = require('razorpay');
+// console.log(process.env.DB_PASS);
+// console.log(process.env.DB_USER);
 const con=require('./db/config');
 
 const app=express();
@@ -54,6 +58,126 @@ app.post('/',(req,res)=>{
     res.send(data);
 });
 
-app.listen(1234, () => {
-  console.log('Server is running on port 1234');
+
+//  Payment gateway integration 
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_SECRET_KEY,
+});
+
+app.post('/create-order', async (req, res) => {
+    const { amount } = req.body; // Get amount from request body
+
+    // Validate the amount
+    if (!amount || isNaN(amount) || amount <= 0) {
+        return res.status(400).send('Invalid amount');
+    }
+    const options = {
+        amount: amount,
+        currency: "INR",
+        receipt: "order_rcptid_11"
+    };
+    try {
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+    } catch (error) {
+        res.status(500).send('Something went wrong');
+    }
+});
+
+
+
+
+app.post('/update-payment-details', (req, res) => {
+    const { name, email,contact, amount, order_id } = req.body;
+
+    if (!name || !email || !amount || !order_id || !contact) {
+        return res.status(400).send('All fields are required');
+    }
+
+    const query = `
+        INSERT INTO payments (order_id, name, email,contact, amount)
+        VALUES (?, ?, ?, ?,?)
+        ON DUPLICATE KEY UPDATE
+            name = VALUES(name),
+            email = VALUES(email),
+            contact = VALUES(contact),
+            amount = VALUES(amount),
+            updated_at = CURRENT_TIMESTAMP
+    `;
+    console.log('inside update payments details api')
+    con.query(query, [order_id, name, email, contact,amount], (err, results) => {
+        if (err) {
+            console.error('Error inserting/updating payment details:', err);
+            return res.status(500).send('Database error');
+        }
+        res.send('Payment details updated successfully');
+    });
+});
+
+const { createHmac } = require('node:crypto');
+app.post('/verify-payment', (req, res) => {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+        return res.status(400).send('All fields are required');
+    }
+
+    // Prepare the data for signature verification
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = createHmac('sha256', process.env.RAZORPAY_SECRET_KEY)
+        .update(body.toString())
+        .digest('hex');
+
+    const isAuthentic = expectedSignature === razorpay_signature;
+
+    let payment_status = isAuthentic ? 'completed' : 'failed';
+
+    // Update payment status in the database
+    const query = `
+        UPDATE payments
+        SET payment_id = ?, payment_status = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE order_id = ?
+    `;
+
+    con.query(query, [razorpay_payment_id, payment_status, razorpay_order_id], (err, results) => {
+        if (err) {
+            console.error('Error updating payment status:', err);
+            return res.status(500).send('Database error');
+        }
+
+        res.send({ status: payment_status });
+    });
+});
+
+
+
+app.get('/payments', (req, res) => {
+    const query = 'SELECT * FROM payments';
+
+    con.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching payment records:', err);
+            return res.status(500).send('Database error');
+        }
+       
+        res.json(results);
+    });
+});
+
+app.get('/users', (req, res) => {
+    const query = 'SELECT * FROM hl_users';
+
+    con.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching users records:', err);
+            return res.status(500).send('Database error');
+        }
+       
+        res.json(results);
+    });
+});
+
+app.listen(process.env.PORT, () => {
+  console.log('Server is running ');
 });
