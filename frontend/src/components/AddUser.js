@@ -17,8 +17,11 @@ const AddUser = () => {
     const [mode, setMode] = useState('');
 
     const [selectedTile, setSelectedTile] = useState(null); // State to track the selected button
+    const [consentChecked, setConsentChecked] = useState(false); // State for the checkbox
 
-
+    const handleConsentChange = (e) => {
+        setConsentChecked(e.target.checked);
+    };
     const navigate = useNavigate();
     // console.log(`the razorpay id si ${process.env.REACT_APP_RAZORPAY_KEY_ID}`);
 
@@ -93,14 +96,18 @@ const AddUser = () => {
                 placeholder="Enter Email"
             />
             {err && !email && <span className="invalid-input">Enter valid email</span>}
-            <input
-                onChange={(e) => { setGender(e.target.value); }}
-                value={gender}
+            <select
                 className="inputBox"
-                type="text"
-                placeholder="Enter Gender"
-            />
-            {err && !gender && <span className="invalid-input">Enter valid gender</span>}
+                value={gender}
+                onChange={(e) => setMode(e.target.value)}
+            >
+                <option value="">Select Gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+
+            </select>
+            {err && !gender && <span className="invalid-input">Enter valid mode</span>}
             <input
                 onChange={(e) => { setPhone(e.target.value); }}
                 value={phone}
@@ -109,14 +116,7 @@ const AddUser = () => {
                 placeholder="Enter Phone"
             />
             {err && !phone && <span className="invalid-input">Enter valid phone</span>}
-            <input
-                onChange={(e) => { setConsent(e.target.value); }}
-                value={consent}
-                className="inputBox"
-                type="text"
-                placeholder="Enter consent number"
-                />
-                {err && !consent && <span className="invalid-input">Enter valid consent</span>}
+            
             <input
                 onChange={(e) => { setCity(e.target.value); }}
                 value={city}
@@ -141,39 +141,56 @@ const AddUser = () => {
                 placeholder="Enter Country"
             />
             {err && !country && <span className="invalid-input">Enter valid country</span>}
-            <input
-                onChange={(e) => { setMode(e.target.value); }}
-                value={mode}
+            <select
                 className="inputBox"
-                type="text"
-                placeholder="Enter Mode (e.g., in_person, online)"
-            />
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+            >
+                <option value="">Select Mode</option>
+                <option value="in_person">In Person</option>
+                <option value="online">Online</option>
+            </select>
             {err && !mode && <span className="invalid-input">Enter valid mode</span>}
+            
+            {/* Consent Section */}
+            <div className="consent-section">
+                <input
+                    type="checkbox"
+                    id="consent"
+                    checked={consentChecked}
+                    onChange={handleConsentChange}
+                />
+                <label htmlFor="consent">
+                    I agree to the <a href="/terms" target="_blank">Terms and Conditions</a>
+                </label>
+            </div>
             <div className="tile-container">
                 <button
                     className={`tile-button ${selectedTile === 'option1' ? 'selected' : ''}`}
                     onClick={() => handleTileSelect('option1')}
                 >
-                    <h3>Option 1</h3>
-                    <p>Short description for option 1</p>
+                    <h3>Register</h3>
+                    <p>Register for 5K run/walk only</p>
                 </button>
 
                 <button
                     className={`tile-button ${selectedTile === 'option2' ? 'selected' : ''}`}
                     onClick={() => handleTileSelect('option2')}
                 >
-                    <h3>Option 2</h3>
-                    <p>Short description for option 2</p>
+                    <h3>Register and Donate a pair of Shoes</h3>
+                    <p>INR 700</p>
                 </button>
 
                 <button
                     className={`tile-button ${selectedTile === 'option3' ? 'selected' : ''}`}
                     onClick={() => handleTileSelect('option3')}
                 >
-                    <h3>Option 3</h3>
-                    <p>Short description for option 3</p>
+                     <h3>Register and Donate Shoes for a Group of 30 Girls</h3>
+                     <p>INR 21,000</p>
                 </button>
             </div>
+
+            
             
             <button className="appButton" onClick={addUser}>Register</button>
             </div>

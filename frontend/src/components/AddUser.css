@@ -95,3 +95,8 @@ html, body {
     font-size: 12px;
   }
   
+
+  .tile-button {
+    height:150px;
+    width:150px;
+  }
