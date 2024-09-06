@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './AddUser.css';
+import headerImage from '../resources/header.png';
 
 const AddUser = () => {
     const [err, setErr] = useState(false);
@@ -14,13 +16,21 @@ const AddUser = () => {
     const [country, setCountry] = useState('');
     const [mode, setMode] = useState('');
 
+    const [selectedTile, setSelectedTile] = useState(null); // State to track the selected button
+
+
     const navigate = useNavigate();
     // console.log(`the razorpay id si ${process.env.REACT_APP_RAZORPAY_KEY_ID}`);
+
+    const handleTileSelect = (tile) => {
+        setSelectedTile(tile); // Set the selected tile
+    };
+
     const addUser = async () => {
         
         let local_err = false;
 
-        if (!name || !email || !gender || !phone || !city || !state || !country || !mode || !number || !consent) {
+        if (!name || !email || !gender || !phone || !city || !state || !country || !mode || !number || !consent || !selectedTile) {
             setErr(true);
             local_err = true;
         } else {
@@ -47,7 +57,18 @@ const AddUser = () => {
 
     return (
         <div className="user">
-            <h1>Add User</h1>
+            <div className="image-container">
+                <img src={headerImage} alt="Large background" className="background-image" />
+                <div className="overlay-header">
+                <h1>Register for 5K Run</h1>
+                </div>
+            </div>
+            <div className="headertext">
+                <p>Hamari Laado invites donations for our MARG, NEEV, Giving Circle, and team programs that positively impact rural and low income girls.</p>
+                <p>If you would like to take the NEEV program to a low income school in a village or in your neighborhood, become a sponsor by Adopting A School !</p>
+                <p>A sponsorship to first generation talented rural girls goes a long way in building confidence and new norms in their families and communities about what girls can  achieve.</p>
+            </div>
+            <div className="userform">
             <input
                 onChange={(e) => { setNumber(e.target.value); }}
                 value={number}
@@ -128,7 +149,34 @@ const AddUser = () => {
                 placeholder="Enter Mode (e.g., in_person, online)"
             />
             {err && !mode && <span className="invalid-input">Enter valid mode</span>}
-            <button className="appButton" onClick={addUser}>Add User</button>
+            <div className="tile-container">
+                <button
+                    className={`tile-button ${selectedTile === 'option1' ? 'selected' : ''}`}
+                    onClick={() => handleTileSelect('option1')}
+                >
+                    <h3>Option 1</h3>
+                    <p>Short description for option 1</p>
+                </button>
+
+                <button
+                    className={`tile-button ${selectedTile === 'option2' ? 'selected' : ''}`}
+                    onClick={() => handleTileSelect('option2')}
+                >
+                    <h3>Option 2</h3>
+                    <p>Short description for option 2</p>
+                </button>
+
+                <button
+                    className={`tile-button ${selectedTile === 'option3' ? 'selected' : ''}`}
+                    onClick={() => handleTileSelect('option3')}
+                >
+                    <h3>Option 3</h3>
+                    <p>Short description for option 3</p>
+                </button>
+            </div>
+            
+            <button className="appButton" onClick={addUser}>Register</button>
+            </div>
         </div>
     );
 };
