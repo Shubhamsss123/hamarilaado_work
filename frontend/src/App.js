@@ -6,6 +6,8 @@ import PaymentButton from './components/PaymentButton';
 import PaymentList from './components/PaymentList';
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import UserList from './components/UserList';
+import Terms from './components/Terms';
+
 function App() {
   return (
     <div className="App">
@@ -19,6 +21,7 @@ function App() {
         <Route path='/payment' element={<PaymentButton />} ></Route>
         <Route path='/payment-list' element={<PaymentList />} ></Route>
         <Route path='/user-list' element={<UserList />} ></Route>
+        <Route path='/terms' element={<Terms />} ></Route>
 
       </Routes>
         {/* <header className="App-header">

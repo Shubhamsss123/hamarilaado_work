@@ -1,0 +1,102 @@
+/* Reset default margin and padding */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Container for the image and overlay */
+  .image-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Fullscreen height */
+    overflow: hidden;
+  }
+  
+  /* Background image */
+  .background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire container */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Puts the image behind the overlay */
+  }
+  
+  /* Overlay header */
+  .overlay-header {
+    position: absolute;
+    bottom: 20px;
+    color: white;
+    margin-left: 20%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .overlay-header h1 {
+    font-size: 48px;
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .overlay-header p {
+    font-size: 20px;
+    margin: 10px 0 0;
+  }
+
+
+   .headertext {
+    padding: 10px;
+    margin-left: 20%; /* Margin for the parent element */
+    margin-right: 20%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #ffffff; /* Light background for the form */
+    }   
+  
+  /* Form section */
+  .userform {
+    padding: 20px;
+    margin-left: 20%; /* Margin for the parent element */
+    margin-right: 20%;
+    border: 1px solid #ccc; /* Optional for visual separation */
+    background-color: #f8f9fa; /* Light background for the form */
+  }
+  
+ 
+
+  .inputBox {
+    border-top: none; 
+    border-left: none; 
+    border-right: none; 
+    border-bottom: 1px solid black; 
+    width: 300px;
+  }
+
+  .appButton {
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .appButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .invalid-input {
+    color: red;
+    font-size: 12px;
+  }
+  
+
+  .tile-button {
+    height:150px;
+    width:150px;
+  }
