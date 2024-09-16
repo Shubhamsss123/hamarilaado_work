@@ -5,41 +5,35 @@ import headerImage from '../resources/header.png';
 
 const AddUser = () => {
     const [err, setErr] = useState(false);
-    const [number, setNumber] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
-    const [consent, setConsent] = useState('');
+    // const [consent, setConsent] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [country, setCountry] = useState('');
     const [mode, setMode] = useState('');
-    const [selectedTile, setSelectedTile] = useState(null); // State to track the selected button
-    const [consentChecked, setConsentChecked] = useState(false); // State for the checkbox
+    const [selectedOption, setSelectedOption] = useState(null);  // New state for button click
+    const [consentChecked, setConsentChecked] = useState(false);
+    const [isUserAdded, setIsUserAdded] = useState(false); // Track if the user is added
+    const [showModal, setShowModal] = useState(false);     // Control the modal visibility
+    const [regNo, setRegNo] = useState(null); // State to hold the userId
+
+
+
     const navigate = useNavigate();
 
     const handleConsentChange = (e) => {
         setConsentChecked(e.target.checked);
     };
 
-    // Handlers for selecting options and triggering payment
-    const registerFor5K = () => {
-        setSelectedTile('option1');
-        addUser(0); // No payment for 5K registration
-    };
+    // // Handle button clicks
+    // const handleButtonClick = (option) => {
+    //     setSelectedOption(option);
+    //     addUser(option);  // Call addUser with the selected option
+    // };
 
-    const donateShoes = () => {
-        setSelectedTile('option2');
-        addUser(700); // Payment for shoes donation
-    };
-
-    const donateGroupShoes = () => {
-        setSelectedTile('option3');
-        addUser(21000); // Payment for group shoes donation
-    };
-
-    // Payment Handler
     const handlePayment = async (amount) => {
         const paymentDetails = {
             name: name,
@@ -49,18 +43,19 @@ const AddUser = () => {
         };
 
         try {
-            const paymentResponse = await processPayment(paymentDetails);  // Call processPayment here
-            alert(paymentResponse); // Show payment success message
+            console.log('Payment Details:', paymentDetails); // Debug payment details
+            const paymentResponse = await processPayment(paymentDetails);
+            console.log('Payment Response:', paymentResponse); // Debug payment response
             navigate('/');
         } catch (paymentError) {
-            alert(paymentError); // Show payment failure message
+            console.error('Payment Error:', paymentError); // Log payment error
         }
     };
 
-    const addUser = async (amount) => {
+    const addUser = async (option) => {
         let local_err = false;
 
-        if (!name || !email || !gender || !phone || !city || !state || !country || !mode || !number || !consent || !selectedTile) {
+        if (!name || !email || !gender || !phone || !city || !state || !country || !mode || !consentChecked) {
             setErr(true);
             local_err = true;
         } else {
@@ -68,24 +63,27 @@ const AddUser = () => {
         }
 
         if (!local_err) {
-            let result = await fetch('https://girls5k.org/api/add-user', {
-                method: "post",
-                body: JSON.stringify({ number, name, email, gender, consent, phone, city, state, country, mode }),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            result = await result.json();
+            try {
+                const result = await fetch('https://girls5k.org/api/add-user', {
+                    method: "POST",
+                    body: JSON.stringify({name, email, gender, phone, city, state, country, mode }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const resultData = await result.json();
+                console.log('Add User Result:', resultData); // Debug add user result
 
-            if (result) {
-                // Proceed with payment after successful form submission
-                try {
-                    await handlePayment(amount);  // Call handlePayment with the correct amount
-                    alert('Registration and payment successful!');
-                    navigate('/');
-                } catch (paymentError) {
-                    alert(paymentError); // Show payment failure message
+                // After successful user registration, check the option and handle payment
+                if (resultData && resultData.regno) {
+                    setRegNo(resultData.regno);
+                    setIsUserAdded(true);  // Set state to indicate user is added
+                    setShowModal(true);     // Open the modal after adding user
                 }
+            } 
+            catch (error) {
+                console.error('Add User Error:', error); // Log add user error
+                alert('User registration failed. Please try again.');
             }
         }
     };
@@ -102,9 +100,7 @@ const AddUser = () => {
                 <p>Hamari Laado invites donations for our MARG, NEEV, Giving Circle, and team programs...</p>
             </div>
             <div className="userform">
-                <input onChange={(e) => setNumber(e.target.value)} value={number} className="inputBox" type="text" placeholder="Enter number" />
-                {err && !number && <span className="invalid-input">Enter valid number</span>}
-
+                
                 <input onChange={(e) => setName(e.target.value)} value={name} className="inputBox" type="text" placeholder="Enter Name" />
                 {err && !name && <span className="invalid-input">Enter valid name</span>}
 
@@ -141,26 +137,49 @@ const AddUser = () => {
                 <div className="consent-section">
                     <input type="checkbox" id="consent" checked={consentChecked} onChange={handleConsentChange} />
                     <label htmlFor="consent">I agree to the <a href="/terms" target="_blank">Terms and Conditions</a></label>
-                </div>
+                </div><br/><br/>
+                {err && !consentChecked && <span className="invalid-input">Please accept the terms and conditions</span>}
 
-                <div className="tile-container">
-                    <button className={`tile-button ${selectedTile === 'option1' ? 'selected' : ''}`} onClick={registerFor5K}>
-                        <h3>Register</h3>
-                        <p>Register for 5K run/walk only</p>
-                    </button>
 
-                    <button className={`tile-button ${selectedTile === 'option2' ? 'selected' : ''}`} onClick={donateShoes}>
-                        <h3>Register and Donate a pair of Shoes</h3>
-                        <p>INR 700</p>
-                    </button>
+                {
+                    showModal && (
+                        <>
+                            <div className="modal-overlay"></div> 
 
-                    <button className={`tile-button ${selectedTile === 'option3' ? 'selected' : ''}`} onClick={donateGroupShoes}>
-                        <h3>Register and Donate Shoes for a Group of 30 Girls</h3>
-                        <p>INR 21,000</p>
-                    </button>
-                </div>
+                            <div className="modal">
+                                <center><h2>Thank you!!!</h2></center>
+                                <button className="close-button" onClick={() => {
+                                    setShowModal(false);
+                                    document.body.classList.remove('modal-open');  // Remove class when closing modal
+                                    window.location.href='https://hamarilaado.org/'
+                                }}>×</button>
+                                <h4>Your Registration is complete!!!! </h4>
+                                <br/>
+                                <h4>Your Registration Number is {regNo}. You will receive a mail with your bib. You can use that for your run.</h4>
+                                <br/><br/>
+                                <h5>Would you also like to donate for the run? Else press "Close" to go back to the main site</h5>
 
-                {/* <button className="appButton" onClick={addUser}>Register</button> */}
+                                <h5>Select Donation Option</h5>
+                                <button onClick={() => handlePayment(700)}>
+                                    Donate a pair of Shoes (INR 700)
+                                </button>
+                                <button onClick={() => handlePayment(21000)}>
+                                    Donate Shoes for a Group of 30 Girls (INR 21,000)
+                                </button>
+                                <button onClick={() => {
+                                    setShowModal(false);
+                                    document.body.classList.remove('modal-open');  // Remove class when closing modal
+                                    window.location.href='https://hamarilaado.org/'
+                                }}>Close</button>
+
+                            </div>
+                        </>
+                    )
+                }
+
+               
+                <button className="appButton" onClick={addUser}>Register</button>
+
             </div>
         </div>
     );
@@ -168,79 +187,80 @@ const AddUser = () => {
 
 // Payment Processing Logic
 const processPayment = async (paymentDetails) => {
-    const { name, email, amount1, contact } = paymentDetails; // Destructure paymentDetails
+    const { name, email, amount1, contact } = paymentDetails;
     const order_url = `https://girls5k.org/api/create-order`;
 
-    const res = await fetch(order_url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount: amount1 * 100 }) // Convert to paise
-    });
-    const data = await res.json();
+    try {
+        const res = await fetch(order_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount: amount1 * 100 }) // Convert to paise
+        });
 
-    if (!data.id) {
-        alert('Failed to create order');
-        return;
-    }
+        const data = await res.json();
+        console.log('Order Creation Response:', data); // Debug order creation response
 
-    // Store payment details in the database
-    // const paymentDetailsUrl = `${process.env.REACT_APP_API_URL}/update-payment-details`;
-    const paymentDetailsUrl = `https://girls5k.org/api/update-payment-details`;
-
-   
-    await fetch(paymentDetailsUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            order_id: data.id,
-            name: name,
-            email: email,
-            amount: amount1,
-            contact: contact
-        })
-    });
-
-    const options = {
-        // key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Add this in your .env file
-        key:'rzp_test_2dgEk0z8Myw5Rm',
-        amount: data.amount,
-        currency: data.currency,
-        name: "Hamari Laado Foundation",
-        description: "Registration Payment",
-        image: "https://hamarilaado.org/media/website/Hamari-Laado-2.png",
-        order_id: data.id,
-        handler: async function (response) {
-            alert(`Payment ID: ${response.razorpay_payment_id}`);
-
-            // Verify payment
-            const verifyPaymentUrl = ` https://girls5k.org/api/verify-payment`;
-            await fetch(verifyPaymentUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_signature: response.razorpay_signature
-                })
-            });
-        },
-        prefill: {
-            name: name,
-            email: email,
-        },
-        theme: {
-            color: "#3399cc"
+        if (!data.id) {
+            throw new Error('Failed to create order');
         }
-    };
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-}
+        // Store payment details in the database
+        const paymentDetailsUrl = `https://girls5k.org/api/update-payment-details`;
+        await fetch(paymentDetailsUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                order_id: data.id,
+                name: name,
+                email: email,
+                amount: amount1,
+                contact: contact
+            })
+        });
+
+        const options = {
+            key: 'rzp_test_2dgEk0z8Myw5Rm',
+            amount: data.amount,
+            currency: data.currency,
+            name: "Hamari Laado Foundation",
+            description: "Registration Payment",
+            image: "https://hamarilaado.org/media/website/Hamari-Laado-2.png",
+            order_id: data.id,
+            handler: async function (response) {
+                console.log('Payment Response:', response); // Debug payment response
+                const verifyPaymentUrl = `https://girls5k.org/api/verify-payment`;
+
+                await fetch(verifyPaymentUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                });
+            },
+            prefill: {
+                name: name,
+                email: email,
+            },
+            theme: {
+                color: "#3399cc"
+            }
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+    } catch (error) {
+        console.error('Process Payment Error:', error); // Log process payment error
+        throw error;
+    }
+};
 
 export default AddUser;

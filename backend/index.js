@@ -16,7 +16,8 @@ app.get('/',(req,res)=>{
 
 app.post('/add-user', (req, res) => {
     let data = req.body;
-    
+
+
     // Insert data into the hl_users table
     con.query('INSERT INTO hl_users SET ?', data, (err, result) => {
         if (err) {
@@ -25,7 +26,9 @@ app.post('/add-user', (req, res) => {
             return res.status(500).send('Error inserting data');
         }
         // Success response
-        res.status(200).send(result);
+        //res.status(200).send(result);
+        res.status(200).send({ regno: result.insertId });
+
     });
 });
 

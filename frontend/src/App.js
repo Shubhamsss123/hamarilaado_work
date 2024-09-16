@@ -16,11 +16,8 @@ function App() {
         <Nav />
       <Routes >
        
-        <Route path='/' element={<h1>Hamari Laado Foundation</h1>}> </Route>
+        <Route path='/' element={<AddUser />} ></Route>
         <Route path='/reg' element={<AddUser />} ></Route>
-        <Route path='/payment' element={<PaymentButton />} ></Route>
-        <Route path='/payment-list' element={<PaymentList />} ></Route>
-        <Route path='/user-list' element={<UserList />} ></Route>
         <Route path='/terms' element={<Terms />} ></Route>
 
       </Routes>
