@@ -13,13 +13,16 @@ const AddUser = () => {
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [country, setCountry] = useState('');
+    const [pan, setPan] = useState('');
+    const [amount, setAmount] = useState('');
     const [mode, setMode] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);  // New state for button click
     const [consentChecked, setConsentChecked] = useState(false);
     const [isUserAdded, setIsUserAdded] = useState(false); // Track if the user is added
     const [showModal, setShowModal] = useState(false);     // Control the modal visibility
     const [regNo, setRegNo] = useState(null); // State to hold the userId
-
+    const [showPanInput, setShowPanInput] = useState(false); // Track whether to show PAN input
+    const [isAmountDisabled, setIsAmountDisabled] = useState(true); // Track if amount input should be disabled
 
 
     const navigate = useNavigate();
@@ -129,8 +132,8 @@ const AddUser = () => {
 
                 <select className="inputBox" value={mode} onChange={(e) => setMode(e.target.value)}>
                     <option value="">Select Mode</option>
-                    <option value="in_person">In Person</option>
-                    <option value="online">Online</option>
+                    <option value="in_person">In-Person, with NEEV girls</option>
+                    <option value="online">Virtually from my location</option>
                 </select>
                 {err && !mode && <span className="invalid-input">Enter valid mode</span>}
 
@@ -143,37 +146,65 @@ const AddUser = () => {
 
                 {
                     showModal && (
-                        <>
-                            <div className="modal-overlay"></div> 
+                    <>
+                        <div className="modal-overlay"></div> 
 
-                            <div className="modal">
-                                <center><h2>Thank you!!!</h2></center>
-                                <button className="close-button" onClick={() => {
-                                    setShowModal(false);
-                                    document.body.classList.remove('modal-open');  // Remove class when closing modal
-                                    window.location.href='https://hamarilaado.org/'
-                                }}>×</button>
-                                <h4>Your Registration is complete!!!! </h4>
-                                <br/>
-                                <h4>Your Registration Number is {regNo}. You will receive a mail with your bib. You can use that for your run.</h4>
-                                <br/><br/>
-                                <h5>Would you also like to donate for the run? Else press "Close" to go back to the main site</h5>
+                        <div className="modal">
+                            <center><h2>Thank you!!!</h2></center>
+                            <button className="close-button" onClick={() => {
+                                setShowModal(false);
+                                document.body.classList.remove('modal-open');  // Remove class when closing modal
+                                window.location.href='https://hamarilaado.org/'
+                            }}>×</button>
+                            <h4>Your Registration is complete!!!! </h4>
+                            <br/>
+                            <h4>Your Registration Number is {regNo}. You will receive a mail with your bib. You can use that for your run.</h4>
+                            <br/><br/>
+                            <h5>Would you also like to donate for the run? Else press "Close" to go back to the main site</h5>
 
-                                <h5>Select Donation Option</h5>
-                                <button onClick={() => handlePayment(700)}>
-                                    Donate a pair of Shoes (INR 700)
-                                </button>
-                                <button onClick={() => handlePayment(21000)}>
-                                    Donate Shoes for a Group of 30 Girls (INR 21,000)
-                                </button>
-                                <button onClick={() => {
-                                    setShowModal(false);
-                                    document.body.classList.remove('modal-open');  // Remove class when closing modal
-                                    window.location.href='https://hamarilaado.org/'
-                                }}>Close</button>
+                            <h5>Select Donation Option</h5>
+                            <button onClick={() => {
+                                setAmount(700);
+                                setIsAmountDisabled(true); 
+                                setShowPanInput(true); // Hide PAN input when selecting a fixed donation
+                            }}>
+                                Donate a pair of Shoes (INR 700)
+                            </button>
+                            <button onClick={() => {
+                                setAmount(15000);
+                                setIsAmountDisabled(true); 
+                                setShowPanInput(true); // Hide PAN input when selecting a fixed donation
+                            }}>
+                                Donate a Run (INR 15,000)
+                            </button>
+                            <button onClick={() => {
+                                setAmount(''); // Clear the amount
+                                setIsAmountDisabled(false); 
+                                setShowPanInput(true); // Show PAN input for custom donation
+                            }}>
+                                Donate any other amount
+                            </button>
 
-                            </div>
-                        </>
+                            {/* Conditionally render the PAN and Amount input fields */}
+                            {showPanInput && (
+                                <div className="modal-PAN">
+                                    <input onChange={(e) => setPan(e.target.value)} value={pan} className="inputBox" type="text" placeholder="Enter PAN No" />
+                                    
+                                    <input 
+                                        onChange={(e) => setAmount(e.target.value)} 
+                                        value={amount} 
+                                        className="inputBox" 
+                                        type="text" 
+                                        placeholder="Enter Amount" 
+                                        disabled={isAmountDisabled}  // Disable the field if a fixed amount is selected
+                                    />
+                                    <button onClick={() => handlePayment(amount)}>
+                                        Proceed and Pay
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </>
                     )
                 }
 
