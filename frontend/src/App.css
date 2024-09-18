@@ -13,7 +13,7 @@
 .nav-ul{
   padding: 5px;
   margin: 0;
-  background-color: skyblue;
+  background-color: #8e5954;
 }
 .nav-right{
   text-align: right;
@@ -24,7 +24,6 @@
   margin-left: 20px;
   width: 75px;
   float: left;
-  border-radius: 50%;
 }
 .register ,.product{
   margin-left: 30%;

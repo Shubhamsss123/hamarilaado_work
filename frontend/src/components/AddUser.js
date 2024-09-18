@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './AddUser.css';
 import headerImage from '../resources/header.png';
+import donateImage from '../resources/donate.jpg';
 
 const AddUser = () => {
     const [err, setErr] = useState(false);
@@ -100,7 +101,11 @@ const AddUser = () => {
                 </div>
             </div>
             <div className="headertext">
-                <p>Hamari Laado invites donations for our MARG, NEEV, Giving Circle, and team programs...</p>
+                <p>Join the movement - to celebrate the girls and be a bridge for them! 
+The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey of rural girls in grades 5-8 who are a part of Hamari Laado’s NEEV program. On this International Day of The Girl, hundreds of girls will be concluding their 10-week NEEV program with a 5 kilometer run! This run is a place for them to feel accomplished and show off their learnings, hard work, and determination. Each step they take is a proud moment, reminding them that they can achieve anything they set their minds to.</p>
+
+<p>We invite you to be part of this inspiring event! Whether you run/walk in your local community or support a school participating in the NEEV program, your involvement helps motivate more girls to reach for their dreams. So, lace up your shoes and join us for the NEEV 5K!
+</p>
             </div>
             <div className="userform">
                 
@@ -133,7 +138,7 @@ const AddUser = () => {
                 <select className="inputBox" value={mode} onChange={(e) => setMode(e.target.value)}>
                     <option value="">Select Mode</option>
                     <option value="in_person">In-Person, with NEEV girls</option>
-                    <option value="online">Virtually from my location</option>
+                    <option value="online">From my location</option>
                 </select>
                 {err && !mode && <span className="invalid-input">Enter valid mode</span>}
 
@@ -150,44 +155,44 @@ const AddUser = () => {
                         <div className="modal-overlay"></div> 
 
                         <div className="modal">
-                            <center><h2>Thank you!!!</h2></center>
+                            <center><h2>Thank you!</h2></center>
                             <button className="close-button" onClick={() => {
                                 setShowModal(false);
                                 document.body.classList.remove('modal-open');  // Remove class when closing modal
                                 window.location.href='https://hamarilaado.org/'
                             }}>×</button>
-                            <h4>Your Registration is complete!!!! </h4>
-                            <br/>
-                            <h4>Your Registration Number is {regNo}. You will receive a mail with your bib. You can use that for your run.</h4>
-                            <br/><br/>
-                            <h5>Would you also like to donate for the run? Else press "Close" to go back to the main site</h5>
 
-                            <h5>Select Donation Option</h5>
-                            <button onClick={() => {
-                                setAmount(700);
-                                setIsAmountDisabled(true); 
-                                setShowPanInput(true); // Hide PAN input when selecting a fixed donation
-                            }}>
-                                Donate a pair of Shoes (INR 700)
-                            </button>
-                            <button onClick={() => {
-                                setAmount(15000);
-                                setIsAmountDisabled(true); 
-                                setShowPanInput(true); // Hide PAN input when selecting a fixed donation
-                            }}>
-                                Donate a Run (INR 15,000)
-                            </button>
-                            <button onClick={() => {
-                                setAmount(''); // Clear the amount
-                                setIsAmountDisabled(false); 
-                                setShowPanInput(true); // Show PAN input for custom donation
-                            }}>
-                                Donate any other amount
-                            </button>
+                           <center> <img src={donateImage} alt="Large background" className="small-image"/></center>
 
-                            {/* Conditionally render the PAN and Amount input fields */}
+                            <p>Your Registration is complete! </p>
+                            <p>Thank you for taking this step in making a difference! Your Registration Number is {regNo}. You will receive a mail with your bib. You will receive a confirmation email and your Bib within 48 hours. We look forward to seeing you sweat and smile on October 11th!</p>
+                            <p>Would you like your impact to last longer? Donate below:</p>
+                            <div className="donateButtons-div">
+                                <button className="donateButton" onClick={() => {
+                                    setAmount(700);
+                                    setIsAmountDisabled(true); 
+                                    setShowPanInput(true); // Hide PAN input when selecting a fixed donation
+                                }}>
+                                    Donate a pair of Shoes (INR 700)
+                                </button>
+                                <button className="donateButton" onClick={() => {
+                                    setAmount(15000);
+                                    setIsAmountDisabled(true); 
+                                    setShowPanInput(true); // Hide PAN input when selecting a fixed donation
+                                }}>
+                                    Donate a Run (INR 15,000)
+                                </button>
+                                <button className="donateButton" onClick={() => {
+                                    setAmount(''); // Clear the amount
+                                    setIsAmountDisabled(false); 
+                                    setShowPanInput(true); // Show PAN input for custom donation
+                                }}>
+                                    Donate any other amount
+                                </button>
+                            </div>
+
                             {showPanInput && (
-                                <div className="modal-PAN">
+                                <div classname = "showPan">
                                     <input onChange={(e) => setPan(e.target.value)} value={pan} className="inputBox" type="text" placeholder="Enter PAN No" />
                                     
                                     <input 
@@ -198,11 +203,13 @@ const AddUser = () => {
                                         placeholder="Enter Amount" 
                                         disabled={isAmountDisabled}  // Disable the field if a fixed amount is selected
                                     />
-                                    <button onClick={() => handlePayment(amount)}>
+                                    <button className="paymentButton" onClick={() => handlePayment(amount)}>
                                         Proceed and Pay
                                     </button>
                                 </div>
                             )}
+                            <p>Press ‘close’ to go back to the main site!</p>                            
+
                         </div>
                     </>
                     )

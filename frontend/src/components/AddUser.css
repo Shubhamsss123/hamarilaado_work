@@ -10,15 +10,15 @@ html, body {
   /* Container for the image and overlay */
   .image-container {
     position: relative;
-    width: 100%;
-    height: 100vh; /* Fullscreen height */
+    width: 80%;
+    height: 80vh; /* Fullscreen height */
     overflow: hidden;
   }
   
   /* Background image */
   .background-image {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
     object-fit: cover; /* Ensures the image covers the entire container */
     position: absolute;
     top: 0;
@@ -26,6 +26,11 @@ html, body {
     z-index: -1; /* Puts the image behind the overlay */
   }
   
+  .small-image {
+    width: 15%;
+    height: 15%;
+  }
+
   /* Overlay header */
   .overlay-header {
     position: absolute;
@@ -67,7 +72,11 @@ html, body {
     background-color: #f8f9fa; /* Light background for the form */
   }
   
- 
+  .thankyouform {
+    padding: 20px;
+    margin-left: 20%; /* Margin for the parent element */
+    margin-right: 20%;
+  }
 
   .inputBox {
     border-top: none; 
@@ -107,8 +116,8 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 70%;      /* 70% of screen width */
-    height: 70%;     /* 70% of screen height */
+    width: 40%;      /* 70% of screen width */
+    height: 90%;     /* 70% of screen height */
     background-color: white;
     padding: 20px;
     border-radius: 8px;
@@ -130,10 +139,66 @@ html, body {
 }
 
 
-.modal button {
-    margin: 10px;
+.donateButtons-div {
+    display: flex;
+    flex-wrap: wrap;           /* Allow buttons to wrap to the next line */
+    justify-content: space-around;
+    gap: 10px;
+    margin-left: 10%;
+    margin-right: 5%;
+    padding: 10px 20px;
+}
+
+.donateButton {
+    line-height: 2;
+    flex-grow: 1;
     padding: 10px 20px;
     cursor: pointer;
+    text-align: center;
+    min-width: 150px; 
+}
+
+/* .paymentButton {
+  line-height: 2;
+   margin-left: 10%;
+   margin-right: 5%;
+} */
+
+.close-button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.modal p {
+  font-size: 14px;
+  font-style: Roboto;
+  text-align: justify;
+  margin-left: 10%;
+  margin-right: 5%;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.showPan {
+  margin-left: 10%;
+  margin-right: 5%;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center the elements horizontally */
+}
+
+.showPan .inputBox {
+  margin-bottom: 15px; /* Add spacing between input fields */
+  width: 80%; /* Adjust the width to fit the container */
+}
+
+.paymentButton {
+  line-height: 2;
+  padding: 10px 20px;
+  margin-top: 10px; /* Add space between inputs and button */
+  text-align: center;
+  width: 80%; /* Adjust the width to fit the container */
 }
 
 .close-button {
@@ -145,7 +210,7 @@ html, body {
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
-  color: #333;  /* Change color if needed */
+  color: #333;
 }
 
 body.modal-open {
