@@ -1,218 +1,233 @@
 /* Reset default margin and padding */
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Container for the image and overlay */
-  .image-container {
-    position: relative;
-    width: 80%;
-    height: 80vh; /* Fullscreen height */
-    overflow: hidden;
-  }
-  
-  /* Background image */
-  .background-image {
-    width: 80%;
-    height: 80%;
-    object-fit: cover; /* Ensures the image covers the entire container */
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1; /* Puts the image behind the overlay */
-  }
-  
-  .small-image {
-    width: 15%;
-    height: 15%;
-  }
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
 
-  /* Overlay header */
-  .overlay-header {
-    position: absolute;
-    bottom: 20px;
-    color: white;
-    margin-left: 20%;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    padding: 10px;
-    border-radius: 10px;
-  }
-  
-  .overlay-header h1 {
-    font-size: 48px;
-    margin: 0;
-    font-weight: bold;
-  }
-  
-  .overlay-header p {
-    font-size: 20px;
-    margin: 10px 0 0;
-  }
+/* Container for the image and overlay */
+.image-container {
+  position: relative;
+  width: 100%;
+  height:70%;
+  overflow: hidden;
+}
+
+.background-image {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Puts the image behind the overlay */
+}
+
+.small-image {
+  width: 15%;
+  height: 15%;
+}
+
+/* Overlay header */
+
+.overlay-header {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  width: auto; /* Adjust width to fit content */
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Optional: adds a border */
+  border-radius: 5px; /* Optional: rounded corners */
+  z-index: 10; /* Ensure it's on top of the image */
+  text-align: center; /* Center text */
+}
 
 
-   .headertext {
-    padding: 10px;
-    margin-left: 20%; /* Margin for the parent element */
-    margin-right: 20%;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #ffffff; /* Light background for the form */
-    }   
-  
-  /* Form section */
-  .userform {
-    padding: 20px;
-    margin-left: 20%; /* Margin for the parent element */
-    margin-right: 20%;
-    border: 1px solid #ccc; /* Optional for visual separation */
-    background-color: #f8f9fa; /* Light background for the form */
-  }
-  
-  .thankyouform {
-    padding: 20px;
-    margin-left: 20%; /* Margin for the parent element */
-    margin-right: 20%;
-  }
+.overlay-header h2 {
+  font-size: 34px; /* Adjust size as needed */
+  text-transform: capitalize;
+  margin: 0;
+}
 
-  .inputBox {
-    border-top: none; 
-    border-left: none; 
-    border-right: none; 
-    border-bottom: 1px solid black; 
-    width: 300px;
-  }
+.overlay-header h1 {
+  font-size: 46px; /* Adjust size as needed */
+  text-transform: capitalize;
+  color: #fd5c4e;
+  margin: 0;
+}
 
-  .appButton {
-    margin: 20px 0;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .appButton:hover {
-    background-color: #0056b3;
-  }
-  
-  .invalid-input {
-    color: red;
-    font-size: 12px;
-  }
-  
-
-  .tile-button {
-    height:150px;
-    width:150px;
-  }
+.overlay-header p {
+  font-size: 20px;
+  margin: 10px 0 0;
+}
 
 
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40%;      /* 70% of screen width */
-    height: 90%;     /* 70% of screen height */
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1001;   /* Ensure modal is on top of the overlay */
-    overflow-y: auto; /* Make content scrollable if needed */
-    outline: none;    /* Remove focus outline */
+ .headertext {
+  padding: 10px;
+  margin-left: 20%; /* Margin for the parent element */
+  margin-right: 20%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #ffffff; /* Light background for the form */
+  }   
+
+  
+
+/* Form section */
+.userform {
+  padding: 20px;
+  margin-left: 20%; /* Margin for the parent element */
+  margin-right: 20%;
+  border: 1px solid #ccc; /* Optional for visual separation */
+  background-color: #f8f9fa; /* Light background for the form */
+}
+
+.thankyouform {
+  padding: 20px;
+  margin-left: 20%; /* Margin for the parent element */
+  margin-right: 20%;
+}
+
+.inputBox {
+  border-top: none; 
+  border-left: none; 
+  border-right: none; 
+  border-bottom: 1px solid black; 
+  width: 300px;
+}
+
+.appButton {
+  margin: 20px 0;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.appButton:hover {
+  background-color: #0056b3;
+}
+
+.invalid-input {
+  color: red;
+  font-size: 12px;
+}
+
+
+.tile-button {
+  height:150px;
+  width:150px;
+}
+
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;      /* 70% of screen width */
+  height: 90%;     /* 70% of screen height */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;   /* Ensure modal is on top of the overlay */
+  overflow-y: auto; /* Make content scrollable if needed */
+  outline: none;    /* Remove focus outline */
 }
 
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    z-index: 1000; /* Should be below the modal */
-    pointer-events: none; /* Prevent interaction */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  z-index: 1000; /* Should be below the modal */
+  pointer-events: none; /* Prevent interaction */
 }
 
 
 .donateButtons-div {
-    display: flex;
-    flex-wrap: wrap;           /* Allow buttons to wrap to the next line */
-    justify-content: space-around;
-    gap: 10px;
-    margin-left: 10%;
-    margin-right: 5%;
-    padding: 10px 20px;
+  display: flex;
+  flex-wrap: wrap;           /* Allow buttons to wrap to the next line */
+  justify-content: space-around;
+  gap: 10px;
+  margin-left: 10%;
+  margin-right: 5%;
+  padding: 10px 20px;
 }
 
 .donateButton {
-    line-height: 2;
-    flex-grow: 1;
-    padding: 10px 20px;
-    cursor: pointer;
-    text-align: center;
-    min-width: 150px; 
+  line-height: 2;
+  flex-grow: 1;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 150px; 
 }
 
 /* .paymentButton {
-  line-height: 2;
-   margin-left: 10%;
-   margin-right: 5%;
+line-height: 2;
+ margin-left: 10%;
+ margin-right: 5%;
 } */
 
 .close-button {
-  padding: 10px 20px;
-  cursor: pointer;
+padding: 10px 20px;
+cursor: pointer;
 }
 
 .modal p {
-  font-size: 14px;
-  font-style: Roboto;
-  text-align: justify;
-  margin-left: 10%;
-  margin-right: 5%;
-  padding: 10px 20px;
-  cursor: pointer;
+font-size: 14px;
+font-style: Roboto;
+text-align: justify;
+margin-left: 10%;
+margin-right: 5%;
+padding: 10px 20px;
+cursor: pointer;
 }
 
 .showPan {
-  margin-left: 10%;
-  margin-right: 5%;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  align-items: center; /* Center the elements horizontally */
+margin-left: 10%;
+margin-right: 5%;
+padding: 10px 20px;
+display: flex;
+flex-direction: column; /* Stack elements vertically */
+align-items: center; /* Center the elements horizontally */
+width: 80%; /* Add this to maintain consistency with other content */
 }
 
 .showPan .inputBox {
-  margin-bottom: 15px; /* Add spacing between input fields */
-  width: 80%; /* Adjust the width to fit the container */
+margin-bottom: 15px; /* Add spacing between input fields */
+width: 100%; /* Make input fields take up the full width of the container */
 }
 
 .paymentButton {
-  line-height: 2;
-  padding: 10px 20px;
-  margin-top: 10px; /* Add space between inputs and button */
-  text-align: center;
-  width: 80%; /* Adjust the width to fit the container */
+line-height: 1;
+padding: 10px 20px;
+margin-top: 10px; /* Add space between inputs and button */
+text-align: center;
+width: 50%; /* Make the button take up the full width of the container */
 }
 
+
 .close-button {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #333;
+position: absolute;
+top: 10px;
+right: 15px;
+background: transparent;
+border: none;
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+color: #333;
 }
 
 body.modal-open {
-  overflow: hidden; /* Prevent scrolling */
+overflow: hidden; /* Prevent scrolling */
 }

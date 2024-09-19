@@ -25,30 +25,6 @@ html, body {
     left: 0;
     z-index: -1; /* Puts the image behind the overlay */
   }
-  
-  /* Overlay header */
-  .overlay-header {
-    position: absolute;
-    bottom: 20px;
-    color: white;
-    margin-left: 20%;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    padding: 10px;
-    border-radius: 10px;
-  }
-  
-  .overlay-header h1 {
-    font-size: 48px;
-    margin: 0;
-    font-weight: bold;
-  }
-  
-  .overlay-header p {
-    font-size: 20px;
-    margin: 10px 0 0;
-  }
-
 
    .headertext {
     padding: 10px;
@@ -59,7 +35,7 @@ html, body {
     }   
   
   /* Form section */
-  .userform {
+  .userwaiver {
     padding: 20px;
     margin-left: 20%; /* Margin for the parent element */
     margin-right: 20%;

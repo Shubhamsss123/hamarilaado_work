@@ -5,6 +5,7 @@ import headerImage from '../resources/header.png';
 import donateImage from '../resources/donate.jpg';
 
 const AddUser = () => {
+    const [err2, setErr2] = useState(false);
     const [err, setErr] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -38,26 +39,63 @@ const AddUser = () => {
     //     addUser(option);  // Call addUser with the selected option
     // };
 
-    const handlePayment = async (amount) => {
+    const handlePayment = async (pan, amount) => {
         const paymentDetails = {
             name: name,
             email: email,
             contact: phone,
+            pan : pan,
+            regno: regNo,
             amount1: amount
         };
 
+        let local_err2 = false;
+
         try {
-            console.log('Payment Details:', paymentDetails); // Debug payment details
-            const paymentResponse = await processPayment(paymentDetails);
-            console.log('Payment Response:', paymentResponse); // Debug payment response
-            navigate('/');
-        } catch (paymentError) {
+
+            if (!pan || !amount) {
+                setErr2(true);
+                local_err2 = true;
+            } 
+            else if (!Number.isInteger(Number(amount))) {
+                setErr2(true);
+                local_err2 = true;
+            } 
+            else {
+                setErr2(false);
+                setShowPanInput(false);
+            }
+    
+            const result = await fetch('https://girls5k.org/api/update-pan', {
+                method: "POST",
+                body: JSON.stringify({paymentDetails}),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            const resultData = await result.json();
+            console.log('Add User Result:', resultData); // Debug add user result
+
+            // After successful user registration, check the option and handle payment
+            if (resultData) {
+                const paymentResponse = await processPayment(paymentDetails);
+                console.log('Payment Response:', paymentResponse); // Debug payment response
+                navigate('/');
+                console.log('Payment Details:', paymentDetails); // Debug payment details
+
+    
+            }
+        } 
+        catch (paymentError) {
             console.error('Payment Error:', paymentError); // Log payment error
         }
+
+        
     };
 
     const addUser = async (option) => {
         let local_err = false;
+        let event_name = '50k Run Oct 2024'
 
         if (!name || !email || !gender || !phone || !city || !state || !country || !mode || !consentChecked) {
             setErr(true);
@@ -70,7 +108,7 @@ const AddUser = () => {
             try {
                 const result = await fetch('https://girls5k.org/api/add-user', {
                     method: "POST",
-                    body: JSON.stringify({name, email, gender, phone, city, state, country, mode }),
+                    body: JSON.stringify({name, email, gender, phone, city, state, country, mode, event_name }),
                     headers: {
                         'Content-Type': 'application/json',
                     }
@@ -95,9 +133,16 @@ const AddUser = () => {
     return (
         <div className="user">
             <div className="image-container">
-                <img src={headerImage} alt="Large background" className="background-image" />
+            <img src={headerImage} alt="Large background" className="background-image" />
                 <div className="overlay-header">
-                    <h1>Register for 5K Run</h1>
+                    <h2>LADKIYA BHAGE SABSE AAGE</h2>
+                    <h1>5K RUN</h1>
+                    <br/><br/><br/>
+                    <h2>11th October</h2>
+                    <h2>International Day of The Girl</h2>
+                    <br/><br/><br/>
+
+                    <h1>Register Below!</h1>
                 </div>
             </div>
             <div className="headertext">
@@ -169,6 +214,7 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
                             <p>Would you like your impact to last longer? Donate below:</p>
                             <div className="donateButtons-div">
                                 <button className="donateButton" onClick={() => {
+                                    setPan('');
                                     setAmount(700);
                                     setIsAmountDisabled(true); 
                                     setShowPanInput(true); // Hide PAN input when selecting a fixed donation
@@ -176,6 +222,7 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
                                     Donate a pair of Shoes (INR 700)
                                 </button>
                                 <button className="donateButton" onClick={() => {
+                                    setPan('');
                                     setAmount(15000);
                                     setIsAmountDisabled(true); 
                                     setShowPanInput(true); // Hide PAN input when selecting a fixed donation
@@ -183,6 +230,7 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
                                     Donate a Run (INR 15,000)
                                 </button>
                                 <button className="donateButton" onClick={() => {
+                                    setPan('');
                                     setAmount(''); // Clear the amount
                                     setIsAmountDisabled(false); 
                                     setShowPanInput(true); // Show PAN input for custom donation
@@ -193,8 +241,8 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
 
                             {showPanInput && (
                                 <div classname = "showPan">
-                                    <input onChange={(e) => setPan(e.target.value)} value={pan} className="inputBox" type="text" placeholder="Enter PAN No" />
-                                    
+                                    <center><input onChange={(e) => setPan(e.target.value)} value={pan} className="inputBox" type="text" placeholder="Enter PAN No" />
+                                    {err2 && !pan && <span className="invalid-input">Enter a PAN</span>}
                                     <input 
                                         onChange={(e) => setAmount(e.target.value)} 
                                         value={amount} 
@@ -203,9 +251,17 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
                                         placeholder="Enter Amount" 
                                         disabled={isAmountDisabled}  // Disable the field if a fixed amount is selected
                                     />
-                                    <button className="paymentButton" onClick={() => handlePayment(amount)}>
+                                    {err2 && !amount && <span className="invalid-input">Enter an Amount</span>}
+
+                                    <button className="paymentButton" onClick={() => {
+                                        setPan('');
+                                        setAmount(15000);
+                                        setIsAmountDisabled(true); 
+                                        handlePayment(pan, amount)
+                                    }
+                                    }>
                                         Proceed and Pay
-                                    </button>
+                                    </button></center>
                                 </div>
                             )}
                             <p>Press ‘close’ to go back to the main site!</p>                            

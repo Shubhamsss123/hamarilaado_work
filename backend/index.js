@@ -32,6 +32,34 @@ app.post('/add-user', (req, res) => {
     });
 });
 
+app.post('/update-pan', (req, res) => {
+    let { pan, regno } = req.body.paymentDetails; // Extract PAN and regno from the request body
+
+    // Ensure that both pan and regno are provided
+    if (!pan || !regno) {
+        return res.status(400).send('PAN and regno are required');
+    }
+
+    // Update PAN for the user with the given regno
+    const query = 'UPDATE hl_users SET pan = ? WHERE regno = ?';
+
+    con.query(query, [pan, regno], (err, result) => {
+        if (err) {
+            // Handle error
+            console.error('Error updating PAN:', err);
+            return res.status(500).send('Error updating PAN');
+        }
+
+        if (result.affectedRows === 0) {
+            // If no rows were updated, the regno might not exist
+            return res.status(404).send('User with the given regno not found');
+        }
+
+        // Success response
+        res.status(200).send({ success: 'success' });
+    });
+});
+
 app.post('/add-user-old',(req,res)=>{
     let data=req.body;
     con.query('insert into hl_users set ?',data,(err,result,field)=>{
@@ -52,15 +80,6 @@ app.get('/show-users', (req, res) => {
         res.status(200).json(results);
     });
 });
-
-app.post('/',(req,res)=>{
-    let data=req.body;
-     con.query('insert into hl_users set ?',data,(err,result,field)=>{
-         res.send(result);
-     })
-    res.send(data);
-});
-
 
 //  Payment gateway integration 
 const razorpay = new Razorpay({
