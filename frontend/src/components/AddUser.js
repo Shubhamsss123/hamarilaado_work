@@ -210,7 +210,7 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
                            <center> <img src={donateImage} alt="Large background" className="small-image"/></center>
 
                             <p>Your Registration is complete! </p>
-                            <p>Thank you for taking this step in making a difference! Your Registration Number is {regNo}. You will receive a mail with your bib. You will receive a confirmation email and your Bib within 48 hours. We look forward to seeing you sweat and smile on October 11th!</p>
+                            <p>Thank you for taking this step in making a difference! Your Registration Number is {regNo}. You will receive a confirmation email and your Bib within 48 hours. We look forward to seeing you sweat and smile on October 11th!</p>
                             <p>Would you like your impact to last longer? Donate below:</p>
                             <div className="donateButtons-div">
                                 <button className="donateButton" onClick={() => {
