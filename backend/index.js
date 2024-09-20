@@ -118,13 +118,14 @@ app.post('/update-payment-details', (req, res) => {
     }
 
     const query = `
-        INSERT INTO payments (order_id, name, email,contact, amount)
+        INSERT INTO payments (order_id, name, email,contact, amount, regno)
         VALUES (?, ?, ?, ?,?)
         ON DUPLICATE KEY UPDATE
             name = VALUES(name),
             email = VALUES(email),
             contact = VALUES(contact),
             amount = VALUES(amount),
+            regno = VALUES(regno),
             updated_at = CURRENT_TIMESTAMP
     `;
     console.log('inside update payments details api')

@@ -10,7 +10,6 @@ const AddUser = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
-    // const [consent, setConsent] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -95,7 +94,8 @@ const AddUser = () => {
 
     const addUser = async (option) => {
         let local_err = false;
-        let event_name = '50k Run Oct 2024'
+        let event_no = '6'
+        let event_date = "2024-10-11"
 
         if (!name || !email || !gender || !phone || !city || !state || !country || !mode || !consentChecked) {
             setErr(true);
@@ -108,7 +108,7 @@ const AddUser = () => {
             try {
                 const result = await fetch('https://girls5k.org/api/add-user', {
                     method: "POST",
-                    body: JSON.stringify({name, email, gender, phone, city, state, country, mode, event_name }),
+                    body: JSON.stringify({name, email, gender, phone, city, state, country, mode, event_no, event_date }),
                     headers: {
                         'Content-Type': 'application/json',
                     }
@@ -317,7 +317,7 @@ const processPayment = async (paymentDetails) => {
         });
 
         const options = {
-            key: 'rzp_test_2dgEk0z8Myw5Rm',
+            key: 'rzp_live_KCfsj4AX7KGUbh',
             amount: data.amount,
             currency: data.currency,
             name: "Hamari Laado Foundation",
