@@ -111,15 +111,15 @@ app.post('/create-order', async (req, res) => {
 
 
 app.post('/update-payment-details', (req, res) => {
-    const { name, email,contact, amount, order_id } = req.body;
+    const { name, email, contact, amount, order_id, regno } = req.body;
 
-    if (!name || !email || !amount || !order_id || !contact) {
+    if (!name || !email || !amount || !order_id || !contact || !regno) {
         return res.status(400).send('All fields are required');
     }
 
     const query = `
-        INSERT INTO payments (order_id, name, email,contact, amount, regno)
-        VALUES (?, ?, ?, ?,?)
+        INSERT INTO payments (order_id, name, email, contact, amount, regno)
+        VALUES (?, ?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
             name = VALUES(name),
             email = VALUES(email),
@@ -128,8 +128,10 @@ app.post('/update-payment-details', (req, res) => {
             regno = VALUES(regno),
             updated_at = CURRENT_TIMESTAMP
     `;
-    console.log('inside update payments details api')
-    con.query(query, [order_id, name, email, contact,amount], (err, results) => {
+    console.log('inside update payments details API');
+    
+    // Make sure all six values are passed into con.query
+    con.query(query, [order_id, name, email, contact, amount, regno], (err, results) => {
         if (err) {
             console.error('Error inserting/updating payment details:', err);
             return res.status(500).send('Database error');
@@ -137,6 +139,7 @@ app.post('/update-payment-details', (req, res) => {
         res.send('Payment details updated successfully');
     });
 });
+
 
 const { createHmac } = require('node:crypto');
 app.post('/verify-payment', (req, res) => {

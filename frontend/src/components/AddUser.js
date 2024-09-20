@@ -281,9 +281,9 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
 
 // Payment Processing Logic
 const processPayment = async (paymentDetails) => {
-    const { name, email, amount1, contact } = paymentDetails;
+    const { name, email, amount1, contact, regno } = paymentDetails;
     const order_url = `https://girls5k.org/api/create-order`;
-
+    console.log(regno);
     try {
         const res = await fetch(order_url, {
             method: 'POST',
@@ -312,7 +312,8 @@ const processPayment = async (paymentDetails) => {
                 name: name,
                 email: email,
                 amount: amount1,
-                contact: contact
+                contact: contact,
+                regno: regno
             })
         });
 
