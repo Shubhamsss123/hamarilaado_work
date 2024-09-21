@@ -265,6 +265,7 @@ The LBSA 5K is an exciting 5-kilometer run that celebrates the amazing journey o
                                 </div>
                             )}
                             <p>Press ‘close’ to go back to the main site!</p>                            
+                            <p>Per Govt norms, donations accepted from Indian bank account only</p> 
 
                         </div>
                     </>
