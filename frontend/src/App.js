@@ -7,6 +7,7 @@ import PaymentList from './components/PaymentList';
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import UserList from './components/UserList';
 import Terms from './components/Terms';
+import Display from './components/Display';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/' element={<AddUser />} ></Route>
         <Route path='/reg' element={<AddUser />} ></Route>
         <Route path='/terms' element={<Terms />} ></Route>
+        <Route path='/display' element={<Display />} ></Route>
 
       </Routes>
         {/* <header className="App-header">
