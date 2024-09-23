@@ -2,12 +2,13 @@
 import './App.css';
 import AddUser from './components/AddUser';
 import Nav from './components/Nav';
-import PaymentButton from './components/PaymentButton';
-import PaymentList from './components/PaymentList';
+//import PaymentButton from './components/PaymentButton';
+//import PaymentList from './components/PaymentList';
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
-import UserList from './components/UserList';
+//import UserList from './components/UserList';
 import Terms from './components/Terms';
 import Display from './components/Display';
+import Payments from './components/Payments';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='/reg' element={<AddUser />} ></Route>
         <Route path='/terms' element={<Terms />} ></Route>
         <Route path='/display' element={<Display />} ></Route>
+        <Route path='/payments' element={<Payments />} ></Route>
 
       </Routes>
         {/* <header className="App-header">
