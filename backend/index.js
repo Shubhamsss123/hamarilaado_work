@@ -5,6 +5,7 @@ const Razorpay = require('razorpay');
 // console.log(process.env.DB_USER);
 const con=require('./db/config');
 const crypto = require('crypto');
+const moment = require('moment-timezone'); // You'll need to install this library: npm install moment-timezone
 
 const app=express();
 
@@ -177,10 +178,15 @@ app.post('/verify-payment', (req, res) => {
     });
 });
 
-app.post('/reconcile', (req, res) => {
-    reconcilePayments("1695167400", "1695513599");
+moment.tz.setDefault("Asia/Kolkata"); 
+// Calculate timestamps
+const fromTimestamp = moment.tz("2024-09-20 00:00:00", "Asia/Kolkata").unix();
+const toTimestamp = moment.tz("2024-09-24 23:59:59", "Asia/Kolkata").unix();
 
-}
+console.log(fromTimestamp); // Output: 1695167400
+console.log(toTimestamp);   // Output: 1695513599
+reconcilePayments(fromTimestamp, toTimestamp);
+
 
 app.get('/payments', (req, res) => {
     const query = 'SELECT * FROM payments ORDER BY regno';
