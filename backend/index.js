@@ -70,7 +70,7 @@ app.post('/add-user-old',(req,res)=>{
 
 app.get('/show-users', (req, res) => {
     // Query to select all users
-    con.query('SELECT * FROM hl_users', (err, results) => {
+    con.query('SELECT * FROM hl_users ORDER BY regno', (err, results) => {
         if (err) {
             // Handle error
             console.error('Error retrieving users:', err);
@@ -179,7 +179,7 @@ app.post('/verify-payment', (req, res) => {
 
 
 app.get('/payments', (req, res) => {
-    const query = 'SELECT * FROM payments';
+    const query = 'SELECT * FROM payments ORDER BY regno';
 
     con.query(query, (err, results) => {
         if (err) {
