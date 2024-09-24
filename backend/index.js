@@ -177,7 +177,10 @@ app.post('/verify-payment', (req, res) => {
     });
 });
 
+app.post('/reconcile', (req, res) => {
+    reconcilePayments("1695167400", "1695513599");
 
+}
 
 app.get('/payments', (req, res) => {
     const query = 'SELECT * FROM payments ORDER BY regno';
@@ -275,6 +278,101 @@ async function processPaymentFailed(paymentData) {
         }
     });
 
+}
+
+async function reconcilePayments(from, to) {
+    try {
+        const paymentsData = await fetchPaymentsFromRazorpay(from, to);
+
+        for (const payment of paymentsData) {
+            const orderId = payment.id;
+            const paymentId = payment.attributes.payments[0].id;
+            const paymentStatus = payment.attributes.status;
+
+            const isPaymentInDatabase = await checkIfPaymentExists(orderId);
+
+            if (!isPaymentInDatabase) {
+                await insertPaymentIntoDatabase(orderId, paymentId, paymentStatus);
+            } else {
+                const currentStatusInDatabase = await getPaymentStatusFromDatabase(orderId);
+                if (currentStatusInDatabase !== paymentStatus) {
+                    await updatePaymentStatusInDatabase(orderId, paymentStatus);
+                }
+            }
+        }
+
+        console.log('Payment reconciliation completed successfully');
+    } catch (error) {
+        console.error('Error during payment reconciliation:', error);
+    }
+}
+
+async function fetchPaymentsFromRazorpay(from, to) {
+    try {
+        const response = await razorpay.orders.all({
+            from: from,
+            to: to
+        });
+
+        return response.items;
+    } catch (error) {
+        console.error('Error fetching payments from Razorpay:', error);
+        throw error;
+    }
+}
+
+// Database helper functions
+
+async function checkIfPaymentExists(orderId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) as count FROM payments WHERE order_id = ?';
+        con.query(query, [orderId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results[0].count > 0); // Resolve true if count is greater than 0
+            }
+        });
+    });
+}
+
+async function insertPaymentIntoDatabase(orderId, paymentId, paymentStatus) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO payments (order_id, payment_id, payment_status) VALUES (?, ?, ?)';
+        con.query(query, [orderId, paymentId, paymentStatus], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results); 
+            }
+        });
+    });
+}
+
+async function getPaymentStatusFromDatabase(orderId) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT payment_status FROM payments WHERE order_id = ?';
+        con.query(query, [orderId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results.length > 0 ? results[0].payment_status : null); 
+            }
+        });
+    });
+}
+
+async function updatePaymentStatusInDatabase(orderId, paymentStatus) {
+    return new Promise((resolve, reject) => {
+        const query = 'UPDATE payments SET payment_status = ? WHERE order_id = ?';
+        con.query(query, [paymentStatus, orderId], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
 }
 
 app.get('/users', (req, res) => {
