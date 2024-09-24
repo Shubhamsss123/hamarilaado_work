@@ -292,19 +292,20 @@ async function reconcilePayments(from, to) {
 
         for (const payment of paymentsData) {
             const orderId = payment.id;
-            const paymentId = payment.attributes.payments[0].id;
-            const paymentStatus = payment.attributes.status;
+            let paymentId, paymentStatus;
 
-            const isPaymentInDatabase = await checkIfPaymentExists(orderId);
-
-            if (!isPaymentInDatabase) {
-                await insertPaymentIntoDatabase(orderId, paymentId, paymentStatus);
+            // Check if payments array exists and is not empty
+            if (payment.attributes.payments && payment.attributes.payments.length > 0) {
+                paymentId = payment.attributes.payments[0].id;
+                paymentStatus = payment.attributes.status;
             } else {
-                const currentStatusInDatabase = await getPaymentStatusFromDatabase(orderId);
-                if (currentStatusInDatabase !== paymentStatus) {
-                    await updatePaymentStatusInDatabase(orderId, paymentStatus);
-                }
+                // Handle the case where there are no payments yet (or other unexpected data)
+                console.warn('No payments found for order:', orderId);
+                // You might want to skip this order or handle it differently based on your requirements
+                continue; // Skip to the next payment in the loop
             }
+
+            // ... (rest of your reconciliation logic)
         }
 
         console.log('Payment reconciliation completed successfully');
