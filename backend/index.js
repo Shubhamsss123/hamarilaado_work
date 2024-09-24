@@ -4,6 +4,7 @@ const Razorpay = require('razorpay');
 // console.log(process.env.DB_PASS);
 // console.log(process.env.DB_USER);
 const con=require('./db/config');
+const crypto = require('crypto');
 
 const app=express();
 
@@ -190,6 +191,91 @@ app.get('/payments', (req, res) => {
         res.json(results);
     });
 });
+
+// Endpoint to handle Razorpay webhooks
+app.post('/razorpay-webhook', async (req, res) => {
+    const signature = req.headers['x-razorpay-signature'];
+    const body = req.body;
+
+    // Verify signature (IMPORTANT for security)
+    const generated_signature = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET_KEY)
+        .update(JSON.stringify(body))
+        .digest('hex');
+
+    if (signature !== generated_signature) {
+        console.error('Webhook signature mismatch');
+        return res.status(400).send('Invalid signature');
+    }
+
+    const webhookEvent = body.event;
+
+    try {
+        // Process the webhook event
+        switch (webhookEvent) {
+            case 'payment.captured':
+                await processPaymentCaptured(body.payload.payment);
+                break;
+            case 'payment.failed':
+                await processPaymentFailed(body.payload.payment);
+                break;
+            // Handle other events as needed
+            default:
+                console.log('Unhandled webhook event:', webhookEvent);
+        }
+
+        res.status(200).send('Webhook processed successfully');
+
+    } catch (error) {
+        // ... (error handling and retry logic)
+    }
+});
+
+async function processPaymentCaptured(paymentData) {
+    const orderId = paymentData.order_id;
+    const paymentId = paymentData.id;
+
+    // Check for idempotency (optional, but recommended)
+    // ... (You might want to check if this payment has already been processed)
+
+    // Update your database 
+    const query = `
+        UPDATE payments
+        SET payment_id = ?, payment_status = 'completed', updated_at = CURRENT_TIMESTAMP
+        WHERE order_id = ?
+    `;
+
+    con.query(query, [paymentId, orderId], (err, results) => {
+        if (err) {
+            console.error('Error updating payment status in webhook:', err);
+            // Handle the error appropriately (e.g., retry, log, notify)
+        } else {
+            console.log('Payment status updated successfully in webhook');
+        }
+    });
+}
+
+// Function to process a payment.failed event
+async function processPaymentFailed(paymentData) {
+    const orderId = paymentData.order_id;
+    const paymentId = paymentData.id; 
+
+    // Update your database to reflect the failed payment
+    const query = `
+        UPDATE payments
+        SET payment_id = ?, payment_status = 'failed', updated_at = CURRENT_TIMESTAMP
+        WHERE order_id = ?
+    `;
+
+    con.query(query, [paymentId, orderId], (err, results) => {
+        if (err) {
+            console.error('Error updating payment status in webhook (failed):', err);
+            // Handle the error appropriately (e.g., retry, log, notify)
+        } else {
+            console.log('Payment status updated to failed in webhook');
+        }
+    });
+
+}
 
 app.get('/users', (req, res) => {
     const query = 'SELECT * FROM hl_users';
